@@ -1,0 +1,209 @@
+basePath: /
+definitions:
+  models.CreateTenantRequest:
+    properties:
+      first_name:
+        type: string
+      is_enabled:
+        type: string
+      license_end_date:
+        type: string
+      license_start_date:
+        type: string
+      license_type:
+        type: string
+      password:
+        type: string
+      total_user_count:
+        type: string
+      username:
+        type: string
+    type: object
+  models.Tenant:
+    properties:
+      _id:
+        type: string
+      first_name:
+        type: string
+      is_enabled:
+        type: string
+      license_end_date:
+        type: string
+      license_start_date:
+        type: string
+      license_type:
+        type: string
+      total_user_count:
+        type: string
+    type: object
+  models.UpdateTenantCredentialsRequestBody:
+    properties:
+      new_password:
+        type: string
+    type: object
+  models.UpdateTenantLicenseRequestBody:
+    properties:
+      new_license_end_date:
+        type: string
+      new_license_start_date:
+        type: string
+      new_license_type:
+        type: string
+    type: object
+  models.UpdateTenantStatusRequestBody:
+    properties:
+      is_enabled:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: The Tenant Microservice APIs
+  title: Tenant Microservice APIs
+  version: "1.0"
+paths:
+  /tenant:
+    get:
+      consumes:
+      - application/json
+      description: Designed to be used with some sort of admin web panel, etc.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: when the operation is successful
+          schema:
+            items:
+              $ref: '#/definitions/models.Tenant'
+            type: array
+        "500":
+          description: when failed reading the database
+          schema:
+            type: string
+      summary: This API can be used to get all tenants.
+      tags:
+      - tenant
+    post:
+      consumes:
+      - application/json
+      description: Adds a new tenant in the database
+      parameters:
+      - description: create tenant request
+        in: body
+        name: default
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateTenantRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "500":
+          description: when there's some error adding the tenant, can be a database
+            failure or a tenant already exist with the id
+          schema:
+            type: string
+      summary: This API can be used to create a new tenant.
+      tags:
+      - tenant
+  /tenant/{tenant_id}:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a tenant from the database by id.
+      parameters:
+      - description: Tenant ID
+        in: path
+        name: tenant_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: when the operation is successful
+          schema:
+            $ref: '#/definitions/models.Tenant'
+        "404":
+          description: when no tenant is found against the provided tenant id
+          schema:
+            type: string
+      summary: This API can be used to get a tenant by id.
+      tags:
+      - tenant
+  /tenant/credentials:
+    put:
+      consumes:
+      - application/json
+      description: Updates a tenant credentials in the database.
+      parameters:
+      - description: update tenant credentials request
+        in: body
+        name: default
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateTenantCredentialsRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "406":
+          description: when there's some error updating the tenant credentials, can
+            be a database failure or no tenant found with the id
+          schema:
+            type: string
+      summary: This API can be used to update a tenant credentials.
+      tags:
+      - tenant
+  /tenant/license:
+    put:
+      consumes:
+      - application/json
+      description: Updates a tenant license in the database.
+      parameters:
+      - description: update tenant license request
+        in: body
+        name: default
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateTenantLicenseRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "406":
+          description: when there's some error updating the tenant, can be a database
+            failure or no tenant found with the id
+          schema:
+            type: string
+      summary: This API can be used to update a tenant license.
+      tags:
+      - tenant
+  /tenant/status:
+    put:
+      consumes:
+      - application/json
+      description: Updates a tenant status in the database.
+      parameters:
+      - description: update tenant status request
+        in: body
+        name: default
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateTenantStatusRequestBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "406":
+          description: when there's some error updating the tenant status, can be
+            a database failure or no tenant found with the id
+          schema:
+            type: string
+      summary: This API can be used to update a tenant status.
+      tags:
+      - tenant
+swagger: "2.0"
